@@ -1,0 +1,84 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: echo-server
+    env: blue
+  name: echo-server-blue
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: echo-server
+      env: blue
+  template:
+    metadata:
+      labels:
+        app: echo-server
+        env: blue
+    spec:
+      containers:
+      - image: ghcr.io/yogendra/echo-server
+        name: echo-server
+        env:
+          - name: port
+            value: "8080"
+          - name: CLUSTER
+            value: blue
+        ports:
+          - containerPort: 8080
+            name: http
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "250m"
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name:  echo-server-blue
+  labels:
+    app: echo-server
+    version: blue
+spec:
+  selector:
+    app:  echo-server
+    version: blue
+  type:  ClusterIP 
+  ports:
+  - name:  http
+    port:  80
+    targetPort:  http
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: echo-server-blue
+  labels:
+    name: echo-server
+    version: blue
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    ingress.kubernetes.io/force-ssl-redirect: "true"
+    kubernetes.io/ingress.class: contour
+    kubernetes.io/tls-acme: "true"
+spec:
+  tls:
+  - secretName: echo-server-blue-tls
+    hosts:
+      - echo-server-blue.nsxbg.cna-demo.ga
+  rules:
+  - host: echo-server-blue.nsxbg.cna-demo.ga
+    http:
+      paths:
+      - pathType: Prefix
+        path: "/"
+        backend:
+          service:
+            name: echo-server-blue
+            port: 
+              name: http

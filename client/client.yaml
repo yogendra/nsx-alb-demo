@@ -1,0 +1,67 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: client
+  name: client
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: client
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: client
+    spec:
+      containers:
+      - image: ghcr.io/yogendra/nsx-alb-client:latest
+        name: nsx-alb-client
+        resources: {}
+        ports:
+          - containerPort: 80
+            name: http
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name:  client
+spec:
+  selector:
+    app: client
+  type: ClusterIP 
+  ports:
+  - name: http
+    port: 80
+    targetPort: http
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: client
+  labels:
+    name: client
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    ingress.kubernetes.io/force-ssl-redirect: "true"
+    kubernetes.io/ingress.class: contour
+    kubernetes.io/tls-acme: "true"
+spec:
+  tls:
+  - secretName: client-tls
+    hosts:
+      - client.nsxbg.cna-demo.ga
+  rules:
+  - host: client.nsxbg.cna-demo.ga
+    http:
+      paths:
+      - pathType: Prefix
+        path: "/"
+        backend:
+          service:
+            name: client
+            port: 
+              name: http

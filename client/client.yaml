@@ -18,10 +18,27 @@ spec:
       containers:
       - image: ghcr.io/yogendra/nsx-alb-client:latest
         name: nsx-alb-client
-        resources: {}
+        resources: 
+          requests:
+            memory: "64Mi"
+            cpu: "250m"
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
         ports:
           - containerPort: 80
             name: http
+        volumeMounts:
+        - name: config-volume
+          mountPath: /usr/share/nginx/html/config
+      volumes:
+        - name: config-volume
+          configMap:
+            name: client
+            items:
+            - path: "demo-config.js"
+              key: "demo-config.js"
+            
 
 ---
 kind: Service
@@ -65,3 +82,22 @@ spec:
             name: client
             port: 
               name: http
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: client
+data:
+  demo-config.js: |
+    window.demoConfig = {
+      "server":{
+        "url": "https://echo-server.nsxbg.cna-demo.ga"
+      },
+      "request": {
+        "interval": 10
+      },
+      "graph": {
+        "max": 500,
+        "colors": ["blue", "green", "cyan", "orange"]
+      }
+    }

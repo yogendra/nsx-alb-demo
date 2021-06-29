@@ -1,10 +1,9 @@
+/*global demoConfig*/
 import React from 'react';
 import { Container, Row, Col } from 'react-bootstrap';
 import HistoryChart from './components/HistoryChart.js';
 import SummaryChart from './components/SummaryChart.js';
 
-const serverUrl = "https://echo-server.nsxbg.cna-demo.ga/";
-const requestInterval = 2000;
 const sources = {};
 
 export default class App extends React.Component {
@@ -19,12 +18,12 @@ export default class App extends React.Component {
   }
  
   componentDidMount() {
-    this.sendRequestTimer = setInterval(() => {this.sendRequest();}, requestInterval);    
+    this.sendRequestTimer = setInterval(() => {this.sendRequest();}, demoConfig.request.interval);    
     this.updateSateTimer = setInterval(()=>{this.updateState();}, 1000);
     console.log("Timers ready");
   }
   sendRequest(){
-    fetch(serverUrl)
+    fetch(demoConfig.server.url)
       .then(response => response.json())
       .then(json => {this.processReponse(json)})
   }

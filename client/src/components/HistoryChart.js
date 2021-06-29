@@ -1,6 +1,7 @@
+/*global demoConfig*/
 import React from "react";
 import { Chart, registerables } from "chart.js";
-const maxHistory = 600;
+
 Chart.register(...registerables);
 
 class HistoryChart extends React.Component {
@@ -35,7 +36,7 @@ class HistoryChart extends React.Component {
         eds[index] = dataset;
       }else{
         eds[index].data.push(dataset.data[0]);
-        if(eds[index].data.length >= maxHistory){
+        if(eds[index].data.length >= demoConfig.graph.max){
           eds[index].data.shift();
         }
       }
@@ -43,7 +44,7 @@ class HistoryChart extends React.Component {
     this.chart.update('none');
   }
   labels(){
-    var len = maxHistory;
+    var len = demoConfig.graph.max;
     return Array.from({length: len}, (_, i) => i + 1)
   }
   datasets(){

@@ -1,5 +1,10 @@
 # NSX ALB Demo
 
+![Screenshot](screenshot.png)
+
+Simple UI to demonstract Blue Green deployment. 
+When you have a single endpoint to access multiple version of the applicaiton and you are moving/dripping traffic from one instance (blue to green), see it happen visually.
+
 ## Prerequisites
 
 - Docker

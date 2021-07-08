@@ -1,12 +1,16 @@
 window.demoConfig = {
   "server":{
-    "url": "https://echo-server.nsxbg.cna-demo.ga"
+    "url": "https://echo-server.nsxbg.cna-demo.ga",
+    "versions": ["blue", "green"]
   },
   "request": {
-    "interval": 10
+    "interval": 10,
+  },
+  "sample": {
+    "interval": 1000,
   },
   "graph": {
-    "max": 500,
-    "colors": ["blue", "green", "cyan", "orange"]
+    "max": 300,
+    "colors": ["blue", "green"]
   }
 }

@@ -1,9 +1,21 @@
 /*global demoConfig*/
 import React from "react";
 import { Chart, registerables } from "chart.js";
+import { Container, Row, Col} from "react-bootstrap";
 
 Chart.register(...registerables);
-
+const style = {
+  container: {
+    "box-shadow":
+      "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)",
+    "text-align": "center",
+    height: "100%"
+  },
+  header: {
+    fontWeight: "bold",
+    color: "#00364d",
+  },
+};
 class HistoryChart extends React.Component {
   constructor(props) {
     super(props);
@@ -12,60 +24,61 @@ class HistoryChart extends React.Component {
   componentDidMount() {
     var options = {
       type: "line",
-
-      data : {
-        labels: this.labels(),
-        datasets: this.datasets(),
-      },
+      data : this._chartData(),
       options: {
         scales: {
             y: {
-                stacked: true
+                stacked: true,
+                beginAtZero: true
             }
         }
     }
     };
     this.chart = new Chart(this.chartContainer.current, options);
   }
-  componentDidUpdate() {
-    const nds = this.datasets();
-    const eds = this.chart.data.datasets;
 
-    nds.forEach((dataset, index) =>{
-      if (typeof eds[index] == "undefined"){
-        eds[index] = dataset;
-      }else{
-        eds[index].data.push(dataset.data[0]);
-        if(eds[index].data.length >= demoConfig.graph.max){
-          eds[index].data.shift();
-        }
-      }
-    });
+  componentDidUpdate() {
+    this.chart.data = this._chartData();
     this.chart.update('none');
   }
-  labels(){
-    var len = demoConfig.graph.max;
-    return Array.from({length: len}, (_, i) => i + 1)
+  _chartData(){
+    return {
+      labels: this._chartLabels(),
+      datasets: this._chartDatasets()
+    };
   }
-  datasets(){
-    return Object.entries(this.props.data)
-      .map( (entry, index) => {
-        const [key,value] = entry;
-        return {
+  _chartLabels(){
+    const count = Object.values(this.props.data).map( version => version.history.length).reduce((x,y)=> Math.max(x,y));
+    var len = Math.min(demoConfig.graph.max, count) ;
+    return Array.from({length: len}, (_, i) => i + 1);
+  }
+  _chartDatasets(){
+    return Object.keys(this.props.data).map( (key) => {
+      const value = this.props.data[key];
+      const history = value.history.slice().splice(-demoConfig.graph.max)
+      return {
           label: key,
-          data: [value],
           fill: true,
-          backgroundColor: key
-        };
-      });
+          backgroundColor: this._colorMap(key),
+          data: history
+      }
+    });
   }
-
+  _colorMap(key) {
+    return key;
+  }
   render() {
     return (
-      <div>
-        <div>History</div>
-        <canvas ref={this.chartContainer} />
-      </div>
+      <Container style={style.container} fluid>
+        <Row style={style.header}>
+          <Col>History</Col>
+        </Row>
+        <Row style={style.content}>
+          <Col>
+            <canvas ref={this.chartContainer} />
+          </Col>
+        </Row>
+      </Container>
     );
   }
 }

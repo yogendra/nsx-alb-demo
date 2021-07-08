@@ -1,6 +1,6 @@
-# NSX ALB Demo
+# Blue-Green Deployment / NSX ALB Demo
 
-![Screenshot](screenshot.png)
+![Screenshot](images/screenshot.png)
 
 Simple UI to demonstract Blue Green deployment. 
 When you have a single endpoint to access multiple version of the applicaiton and you are moving/dripping traffic from one instance (blue to green), see it happen visually.
@@ -11,7 +11,19 @@ When you have a single endpoint to access multiple version of the applicaiton an
 - kubectl
 - Patience
 
-## Commands
+
+## How to deploy
+
+1. Deploy blue version on one environment
+    1. Add an environment variable in the deployment: `CLUSTER=blue`
+    1. Setup a env-specific endpoint
+1. Deploy green version on another environment
+    1. Add an environment variable in the deployment: `CLUSTER=green`
+1. Setup a Global LB/DNS entry pointing to both envs
+1. Deploy the client application on one of the environment and configure ingress
+1. Goto client application
+
+## Scratch space
 
 ```bash
 
@@ -37,4 +49,4 @@ kubectl create rolebinding client-privileged \
 
 ## Credits
 
-* [React ChartJS Dashboard](https://www.createwithdata.com/react-chartjs-dashboard/)
+- [React ChartJS Dashboard](https://www.createwithdata.com/react-chartjs-dashboard/)

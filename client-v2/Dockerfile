@@ -16,6 +16,6 @@ COPY package-lock.json ./
 RUN npm ci --silent
 COPY --from=build-client /app/build/. client/build/
 COPY server/ ./server/
-EXPOSE 3000
+EXPOSE 3001
 USER node
 CMD ["npm", "start"]

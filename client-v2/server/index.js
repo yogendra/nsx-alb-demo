@@ -7,6 +7,10 @@ import { Resolver } from "dns";
 
 import cors from "cors";
 import { readFileSync, existsSync} from 'fs';
+import path from "path";
+import { fileURLToPath } from 'url';
+
+
 const configFile = process.env.CONFIG_FILE || "config.json";
 const config = existsSync(configFile)? JSON.parse(readFileSync(configFile)): JSON.parse(process.env.CONFIG_JSON);
 
@@ -41,6 +45,9 @@ const dnsResolver = config.endpoint.type === "dns" ? new Resolver() : null;
 if (dnsResolver != null) {
   dnsResolver.setServers(config.endpoint.nameservers);
 }
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 app.use(express.static(path.resolve(__dirname, '../client/build')));
 

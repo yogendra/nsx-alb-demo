@@ -1,0 +1,15 @@
+{
+  "port": 3001,
+  "endpoint": {
+    "address": "https://echo-server.nsxbg.cna-demo.ga",
+    "type": "web",
+    "versions": ["blue", "green"]
+  },
+  "probe": {
+    "interval": 10
+  },
+  "sample": {
+    "interval": 1000,
+    "max": 600
+  }
+}

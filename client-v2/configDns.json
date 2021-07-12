@@ -1,0 +1,20 @@
+
+ {
+  "port" : 3001,  
+  "endpoint": {
+    "type": "dns",
+    "address": "test-dns.nsxbg.cna-demo.ga",
+    "nameservers": ["205.251.198.208","205.251.195.139","205.251.196.100","205.251.193.12"],
+    "versionMap": {
+      "10.0.0.1": "blue",
+      "10.0.0.2": "green"
+    }
+  },
+  "probe": {
+    "interval": 10
+  },
+  "sample": {
+    "interval": 1000,
+    "max": 600
+  }
+}

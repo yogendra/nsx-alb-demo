@@ -14,11 +14,27 @@ Demo client for DNS/HTTP based blue-green deployment
       kubectl apply -f client-v2-dns.yaml
       ```
 
+
+
     b. HTTP based probe: edit and Apply `client-v2-http.yaml`
 
       ```bash
       kubectl apply -f client-v2-dns.yaml
       ```
+
+    **Configuration Options**
+    |value|Meaning | Example |
+    |-|-|-|
+    |`port` | Port on which server should run (Number) | `5000` |
+    |`endpoint.address` | Addres of the endpoint to probe. (URL) | `https://mysite.com` | |
+    |`endpoint.type` | Type of endpoint - `web` or `dns` | `web`, `dns`| |
+    |`endpoint.versions` | Version names. Required for web type endpoint (Array of string) | `["blue","green"]` | |
+    |`endpoint.nameservers` | List of name servers. Required for dns type endpoint | `["8.8.8.8","4.4.4.4"]`|
+    |`endpoint.versionMap` | Map IP addresses to version, Required for dns type endpoint | `{"10.0.0.1": "blue", "10.0.0.2": "green"}`|
+    | `probe.interval` | Amount of time in milliseconds between probes. (Number) | `10`|
+    | `sample.interval` | Amount of time in milliseconds between capturing sample (Number) | `10` |
+    | `sample.max` | Maximum samples to keep (Number) | `600`|
+    | `graph.colors` | Array of colors names for the graph | `["blue","green"]` |
 
 1. **Deploy application**
 

@@ -52,6 +52,13 @@ export default class App extends React.Component {
       });
     clearInterval(this.updateSateTimer);
   }
+  handleReset(){
+    fetch("/api/v1/actions/reset")
+      .then((response) => response.json())
+      .then((response) => {
+        this.setState(response);
+      });
+  }
 
   render() {
     const stopped = this.state.status.running !== true
@@ -81,13 +88,14 @@ export default class App extends React.Component {
       <Container fluid="xs" style={style.container}>
         <Row style={style.header}>
           <Col>NSX Demo</Col>
+          
           <Col xs={1}>
             <Button
-              size="lg"
+              size="sm"
               onClick={handleClick}
               variant={stopped ? "primary" : "danger"}
-            >
-              {stopped ? "Start" : "Stop"} Test
+              >
+              <span>{stopped ? "Start" : "Stop"} Test</span>
             </Button>
           </Col>
         </Row>

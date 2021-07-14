@@ -50,7 +50,6 @@ class SummaryChart extends React.Component {
   }
   componentDidUpdate() {
     this.chart.data = this._chartData();
-    console.log(this.chart.data);
     this.chart.update();
   }
   render() {

@@ -27,20 +27,22 @@ const port = process.env.PORT || config.port || 3001;
 var probeSchedule = null;
 var sampleSchedule = null;
 
+const emptySources = {
+  blue: {
+    total: 0,
+    history: [],
+  },
+  green: {
+    total: 0,
+    history: [],
+  },
+};
+
 const data = {
   status: {
     running: false
   },
-  sources: {
-    blue: {
-      total: 0,
-      history: [],
-    },
-    green: {
-      total: 0,
-      history: [],
-    },
-  },
+  sources: {...emptySources},
   config : {
     sample: config.sample,
     graph: config.graph
@@ -88,8 +90,13 @@ app.get("/api/v1/actions/probe", (req, res) => {
   res.json(data.sources);
 });
 app.get("/api/v1/actions/sample", (req, res) => {  
-  sample()
+  sample();
   res.json(data.sources);
+});
+app.get("/api/v1/actions/reset", (req,res) => {
+  data.sources = {...emptySources};
+  console.log(data);
+  res.json(data);
 });
 app.get('*', (req, res) => {
   res.sendFile(path.resolve(__dirname, '../client/build', 'index.html'));

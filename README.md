@@ -11,7 +11,6 @@ When you have a single endpoint to access multiple version of the applicaiton an
 - kubectl
 - Patience
 
-
 ## How to deploy
 
 1. Deploy blue version on one environment

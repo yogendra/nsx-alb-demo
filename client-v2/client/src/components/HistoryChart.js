@@ -1,15 +1,14 @@
-/*global demoConfig*/
 import React from "react";
 import { Chart, registerables } from "chart.js";
-import { Container, Row, Col} from "react-bootstrap";
+import { Container, Row, Col } from "react-bootstrap";
 
 Chart.register(...registerables);
 const style = {
   container: {
-    "box-shadow":
+    boxShadow:
       "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)",
-    "text-align": "center",
-    height: "100%"
+    textAlign: "center",
+    height: "100%",
   },
   header: {
     fontWeight: "bold",
@@ -24,45 +23,43 @@ class HistoryChart extends React.Component {
   componentDidMount() {
     var options = {
       type: "line",
-      data : this._chartData(),
+      data: this._chartData(),
       options: {
+        elements: {
+          point:{
+            radius: 0
+          }
+        },
         scales: {
-            y: {
-                stacked: true,
-                beginAtZero: true
-            }
-        }
-    }
+          y: {
+            stacked: true,
+            beginAtZero: true            
+          }
+        },
+      },
     };
     this.chart = new Chart(this.chartContainer.current, options);
   }
 
   componentDidUpdate() {
     this.chart.data = this._chartData();
-    this.chart.update('none');
+    this.chart.update("none");
   }
-  _chartData(){
-    return {
-      labels: this._chartLabels(),
-      datasets: this._chartDatasets()
-    };
-  }
-  _chartLabels(){
-    const count = Object.values(this.props.data).map( version => version.history.length).reduce((x,y)=> Math.max(x,y));
-    var len = Math.min(demoConfig.graph.max, count) ;
-    return Array.from({length: len}, (_, i) => i + 1);
-  }
-  _chartDatasets(){
-    return Object.keys(this.props.data).map( (key) => {
-      const value = this.props.data[key];
-      const history = value.history.slice().splice(-demoConfig.graph.max)
-      return {
-          label: key,
+  _chartData() {
+    const chartData = {
+      datasets: Object.entries(this.props.data).map(([sourceName, source]) => {
+        return {
+          label: sourceName,
+          data: source.history,
           fill: true,
-          backgroundColor: this._colorMap(key),
-          data: history
-      }
-    });
+          backgroundColor: this._colorMap(sourceName)
+          
+        };
+      }),
+    };
+    const labelCount = chartData.datasets.map(x => x.data.length).reduce((a,c)=> Math.max(a,c));    
+    chartData.labels = Array.from({length: labelCount}, (_, i) => i + 1);
+    return chartData;
   }
   _colorMap(key) {
     return key;

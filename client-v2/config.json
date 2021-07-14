@@ -11,5 +11,9 @@
   "sample": {
     "interval": 1000,
     "max": 600
+  },
+  "graph": {
+    "colors": ["blue", "green"]
   }
+
 }

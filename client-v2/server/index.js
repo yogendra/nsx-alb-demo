@@ -28,18 +28,25 @@ var probeSchedule = null;
 var sampleSchedule = null;
 
 const data = {
-  blue: {
-    total: 0,
-    history: [],
+  status: {
+    running: false
   },
-  green: {
-    total: 0,
-    history: [],
+  sources: {
+    blue: {
+      total: 0,
+      history: [],
+    },
+    green: {
+      total: 0,
+      history: [],
+    },
   },
+  config : {
+    sample: config.sample,
+    graph: config.graph
+  }
 };
-var status = {
-  running: false
-};
+
 
 const dnsResolver = config.endpoint.type === "dns" ? new Resolver() : null;
 if (dnsResolver != null) {
@@ -57,30 +64,32 @@ app.get("/", (req,res)=>{
   res.redirect("/index.html")
 })
 app.get("/api/v1", (req, res) => {
-  res.send({ status: status.running? "running": "stopped", stats: data});
-});
-app.get("/api/v1/stats", (req, res) => {
   res.json(data);
 });
-app.get("/api/v1/start", (req, res) => {
-  setupSchedule();  
-  res.json({
-    status: status.running? "running": "stopped",
-  });
+app.get("/api/v1/status", (req, res) => {
+  res.json(data.status);
 });
-app.get("/api/v1/stop", (req, res) => {
+app.get("/api/v1/config", (req, res) => {
+  res.json(data.config);
+});
+app.get("/api/v1/sources", (req, res) => {
+  res.json(data.sources);
+});
+app.get("/api/v1/actions/start", (req, res) => {
+  setupSchedule();
+  res.json(data.status);
+});
+app.get("/api/v1/actions/stop", (req, res) => {
   clearSchedule();
-  res.json({
-    status: status.running? "running": "stopped",
-  });
+  res.json(data.status);
 });
-app.get("/api/v1/probe", (req, res) => {
+app.get("/api/v1/actions/probe", (req, res) => {
   probe();  
-  res.json(data);
+  res.json(data.sources);
 });
-app.get("/api/v1/sample", (req, res) => {  
+app.get("/api/v1/actions/sample", (req, res) => {  
   sample()
-  res.json(data);
+  res.json(data.sources);
 });
 app.get('*', (req, res) => {
   res.sendFile(path.resolve(__dirname, '../client/build', 'index.html'));
@@ -95,7 +104,7 @@ function setupSchedule() {
   probeSchedule = setInterval(probe, config.probe.interval);
   sampleSchedule = setInterval(sample, config.sample.interval);
   console.log("Setup Schedule");
-  status.running = true;
+  data.status.running = true;
 }
 
 function clearSchedule() {
@@ -106,7 +115,7 @@ function clearSchedule() {
     clearInterval(sampleSchedule);
   }
   console.log("Cleared Schedule");
-  status.running = false;
+  data.status.running = false;
 }
 process.on("beforeExit", clearSchedule);
 
@@ -128,7 +137,7 @@ function probeWeb() {
     .get(config.endpoint.address)
     .then((res) => {
       const version = probeWebVersionExtractor(res.data);
-      ++data[version].total;
+      ++data.sources[version].total;
     })
     .catch((err) => {
       console.error("[WebProbeError]" + err);
@@ -139,13 +148,13 @@ function probeDns() {
     const address = rec[0].address;
     const version = config.endpoint.versionMap[address];
     console.log({ a: address, v: version });
-    ++data[version].total;
+    ++data.sources[version].total;
   });
 }
 
 function sample() {
-  Object.keys(data).forEach((versionName) => {
-    const version = data[versionName];
+  Object.keys(data.sources).forEach((versionName) => {
+    const version = data.sources[versionName];
     version.history = version.history.splice(1 - config.sample.max);
     version.history.push(version.total);
   });

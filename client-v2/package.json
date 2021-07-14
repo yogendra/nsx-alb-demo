@@ -9,7 +9,8 @@
     "test-dns": "CONFIG_JSON=$(cat configDns.json) node --experimental-json-modules server/index.js",
     "start": "node --experimental-json-modules server/index.js",
     "build": "cd client && npm install && npm run build",
-    "docker-build": "docker  build -t ghcr.io/yogendra/blue-green:latest ."
+    "docker-build": "docker  build -t ghcr.io/yogendra/blue-green:latest .",
+    "docker-publish": "docker  push ghcr.io/yogendra/blue-green:latest"
     
   },
   "keywords": [],

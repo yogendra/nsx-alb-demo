@@ -17,5 +17,5 @@ RUN npm ci --silent
 COPY --from=build-client /app/build/. client/build/
 COPY server/ ./server/
 EXPOSE 3001
-USER node
+USER 1000
 CMD ["npm", "start"]

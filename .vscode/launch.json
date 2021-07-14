@@ -6,10 +6,35 @@
   "configurations": [
     {
       "command": "npm start",
-      "name": "Run npm start",
+      "name": "blue-green-backend - npm start",
       "request": "launch",
       "type": "node-terminal",
       "cwd": "${workspaceFolder}/blue-green-backend"
+    },
+    {
+      "command": "npm start",
+      "name": "client-v2/client - npm start",
+      "request": "launch",
+      "type": "node-terminal",
+      "cwd": "${workspaceFolder}/client-v2/client"
+    },
+    {
+      "command": "npm start",
+      "name": "client-v2 - npm start",
+      "request": "launch",
+      "type": "node-terminal",
+      "cwd": "${workspaceFolder}/client-v2",
+      "env": {
+        "CONFIG_FILE": "configHttp.json"
+      }
+    },
+    
+    {
+      "name": "client-v2/client - Launch Chrome",
+      "request": "launch",
+      "type": "pwa-chrome",
+      "url": "http://localhost:3000",
+      "webRoot": "${workspaceFolder}/client-v2/client/"
     }
   ]
 }

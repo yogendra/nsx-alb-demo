@@ -1,78 +1,84 @@
-/*global demoConfig*/
 import React from "react";
 import { Container, Row, Col, Button } from "react-bootstrap";
 import HistoryChart from "./components/HistoryChart.js";
 import SummaryChart from "./components/SummaryChart.js";
 
 const style = {
-  container :{
-    
-  },
-  header : {
-    color: 'white',
+  container: {},
+  header: {
+    color: "white",
     backgroundColor: "#00364d",
     padding: "10px",
     fontSize: "32px",
     fontWeight: "bold",
-    "margin-bottom": "10px"
-
-  }
+    marginBottom: "10px"
+  },
 };
 export default class App extends React.Component {
   constructor(props) {
     super(props);
     this.sources = {};
-    demoConfig.server.versions.forEach((version) => {
-      this.sources[version] = {
-        total: 0,
-        history: [],
-      };
-    });
     this.state = {
-      stopped: true,
-      sources: { ...this.sources },
-      colors: demoConfig.graph.colors,
-    };
+      status: {
+        running: false
+      }
+    };    
+  }
+  componentDidMount(){
     this.updateState();
   }
-
- 
   updateState() {
     fetch("/api/v1/")
       .then((response) => response.json())
       .then((response) => {
-        this.setState({ status: response.status, sources: response.data });
-      });    
+        this.setState(response);
+      });
   }
   startTesting() {
-    
-    fetch("/api/v1/start")
-      .then(response => response.json())
-      .then(response =>{
-        this.setState({status: response.status});
+    fetch("/api/v1/actions/start")
+      .then((response) => response.json())
+      .then((response) => {
+        this.setState({ status: response });
       });
     this.updateSateTimer = setInterval(() => {
       this.updateState();
     }, 1000);
-  
   }
   stopTesting() {
-    fetch("/api/v1/stop")
-      .then(response => response.json())
-      .then(response =>{
-        this.setState({status: response.status});
+    fetch("/api/v1/actions/stop")
+      .then((response) => response.json())
+      .then((response) => {
+        this.setState({ status: response });
       });
     clearInterval(this.updateSateTimer);
   }
 
   render() {
-    const stopped = this.state.status !== "running";
+    const stopped = this.state.status.running !== true
     const handleClick = stopped
       ? this.startTesting.bind(this)
       : this.stopTesting.bind(this);
+    const summary = !this.state.sources ? (
+      ""
+    ) : (
+      <SummaryChart
+        title="Summary"
+        data={this.state.sources}
+        config={this.state.config}
 
+      />
+    );
+    const history = !this.state.sources ? (
+      ""
+    ) : (
+      <HistoryChart
+        title="History"
+        data={this.state.sources}
+        config={this.state.config}
+      />
+    );
     return (
-      <Container fluid="xs" style={style.container} > 
+      <Container fluid="xs" style={style.container}>
         <Row style={style.header}>
           <Col>NSX Demo</Col>
           <Col xs={1}>
@@ -86,20 +92,8 @@ export default class App extends React.Component {
           </Col>
         </Row>
         <Row>
-          <Col xs={2}>
-            <SummaryChart
-              title="Summary"
-              data={this.state.sources}
-              colors={this.state.colors}
-            />
-          </Col>
-          <Col xs={10}>
-            <HistoryChart
-              title="History"
-              data={this.state.sources}
-              colors={this.state.colors}
-            />
-          </Col>
+          <Col xs={2}>{summary}</Col>
+          <Col xs={10}>{history}</Col>
         </Row>
         <Row></Row>
       </Container>

@@ -27,7 +27,7 @@ class SummaryChart extends React.Component {
           animateRotate: false,
         },
       },
-      data: this._chartData(),
+      data: []
     };
     this.chart = new Chart(this.chartContainer.current, options);
   }
@@ -42,9 +42,8 @@ class SummaryChart extends React.Component {
       labels: labels,
       datasets: [
         {
-          // labels: labels,
           data: data,
-          backgroundColor: this.props.colors,
+          backgroundColor: this.props.config.graph.colors,
         },
       ],
     };
@@ -55,7 +54,7 @@ class SummaryChart extends React.Component {
     this.chart.update();
   }
   render() {
-    const table = Object.keys(this.props.data).map((version) => {
+    const table = !this.props.data ? [] : Object.keys(this.props.data).map((version) => {
       return (
         <Row>
           <Col>{version}</Col>
@@ -63,6 +62,7 @@ class SummaryChart extends React.Component {
         </Row>
       );
     });
+    
     return (
       <Container style={style.container} fluid>
         <Row style={style.header}>

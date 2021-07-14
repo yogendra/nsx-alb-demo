@@ -1,4 +1,5 @@
 **/node_modules/
-client/public/config
-client/build
-
+.dockerignore
+client-v2.yaml
+config*json
+Dockerfile

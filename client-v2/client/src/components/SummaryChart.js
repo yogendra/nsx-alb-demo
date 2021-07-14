@@ -27,7 +27,7 @@ class SummaryChart extends React.Component {
           animateRotate: false,
         },
       },
-      data: []
+      data: this._chartData()
     };
     this.chart = new Chart(this.chartContainer.current, options);
   }

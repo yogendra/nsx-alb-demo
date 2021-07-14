@@ -1,9 +1,0 @@
-docker-compose.yaml
-node_modules/
-.gitignore
-.dockerignore
-client-backend.yaml
-Dockerfile
-config*.json
-blue-green-backend*.yaml
-Makefile

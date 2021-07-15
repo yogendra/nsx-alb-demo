@@ -11,7 +11,7 @@ const style = {
     padding: "10px",
     fontSize: "32px",
     fontWeight: "bold",
-    marginBottom: "10px"
+    marginBottom: "10px",
   },
 };
 export default class App extends React.Component {
@@ -20,11 +20,11 @@ export default class App extends React.Component {
     this.sources = {};
     this.state = {
       status: {
-        running: false
-      }
-    };    
+        running: false,
+      },
+    };
   }
-  componentDidMount(){
+  componentDidMount() {
     this.updateState();
   }
   updateState() {
@@ -32,6 +32,11 @@ export default class App extends React.Component {
       .then((response) => response.json())
       .then((response) => {
         this.setState(response);
+        if (response.status.running) {
+          this.startAutoUpdate();
+        } else {
+          this.stopAutoUpdate();
+        }
       });
   }
   startTesting() {
@@ -40,9 +45,17 @@ export default class App extends React.Component {
       .then((response) => {
         this.setState({ status: response });
       });
-    this.updateSateTimer = setInterval(() => {
+    this.startAutoUpdate();
+  }
+  startAutoUpdate() {
+    this.autoUpdateTimer = setInterval(() => {
       this.updateState();
     }, 1000);
+  }
+  stopAutoUpdate() {
+    if (this.autoUpdateTimer != null) {
+      clearInterval(this.autoUpdateTimer);
+    }
   }
   stopTesting() {
     fetch("/api/v1/actions/stop")
@@ -50,9 +63,9 @@ export default class App extends React.Component {
       .then((response) => {
         this.setState({ status: response });
       });
-    clearInterval(this.updateSateTimer);
+    this.stopAutoUpdate();
   }
-  handleReset(){
+  handleReset() {
     fetch("/api/v1/actions/reset")
       .then((response) => response.json())
       .then((response) => {
@@ -61,7 +74,7 @@ export default class App extends React.Component {
   }
 
   render() {
-    const stopped = this.state.status.running !== true
+    const stopped = this.state.status.running !== true;
     const handleClick = stopped
       ? this.startTesting.bind(this)
       : this.stopTesting.bind(this);
@@ -72,7 +85,6 @@ export default class App extends React.Component {
         title="Summary"
         data={this.state.sources}
         config={this.state.config}
-
       />
     );
     const history = !this.state.sources ? (
@@ -87,15 +99,26 @@ export default class App extends React.Component {
     return (
       <Container fluid="xs" style={style.container}>
         <Row style={style.header}>
-          <Col>NSX Demo</Col>
-          
-          <Col xs={1}>
+          <Col sm={10}>NSX Demo</Col>
+
+          <Col sm="auto">
+            <Button
+              size="sm"
+              onClick={(event) => {
+                this.handleReset();
+              }}
+              variant="secondary"
+            >
+              Reset
+            </Button>
+          </Col>
+          <Col sm="auto">
             <Button
               size="sm"
               onClick={handleClick}
               variant={stopped ? "primary" : "danger"}
-              >
-              <span>{stopped ? "Start" : "Stop"} Test</span>
+            >
+              {stopped ? "Start" : "Stop"} Test
             </Button>
           </Col>
         </Row>

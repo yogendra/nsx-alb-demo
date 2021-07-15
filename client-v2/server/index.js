@@ -20,35 +20,42 @@ if(config === undefined){
 }else{
   console.dir(config);
 }
-
+function buildSources(){
+  const sources = {};
+  const emptyStats = {total: 0, history: []};
+  if(config.endpoint.type  === "web"){
+    config.endpoint.versions.forEach(version => {
+      sources[version] = {...emptyStats};
+    });
+  }else if(config.endpoint.type === "dns"){
+    Object.entries(config.endpoint.versionMap).forEach(([key,version])=>{
+      if(!sources[version]){
+        sources[version] = {...emptyStats};
+      }
+    });
+  }else{
+    console.error("Unknown source type");
+  }
+  return sources;
+}
 const app = express();
 app.use(cors());
 const port = process.env.PORT || config.port || 3001;
 var probeSchedule = null;
 var sampleSchedule = null;
 
-const emptySources = {
-  blue: {
-    total: 0,
-    history: [],
-  },
-  green: {
-    total: 0,
-    history: [],
-  },
-};
-
 const data = {
   status: {
     running: false
   },
-  sources: {...emptySources},
+  sources: {},
   config : {
     sample: config.sample,
     graph: config.graph
   }
 };
 
+data.sources = buildSources();
 
 const dnsResolver = config.endpoint.type === "dns" ? new Resolver() : null;
 if (dnsResolver != null) {
@@ -94,8 +101,9 @@ app.get("/api/v1/actions/sample", (req, res) => {
   res.json(data.sources);
 });
 app.get("/api/v1/actions/reset", (req,res) => {
-  data.sources = {...emptySources};
-  console.log(data);
+  console.dir({src: data.sources});
+  data.sources = buildSources();
+  console.dir({src: data.sources});
   res.json(data);
 });
 app.get('*', (req, res) => {

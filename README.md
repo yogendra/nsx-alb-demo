@@ -25,8 +25,6 @@ When you have a single endpoint to access multiple version of the applicaiton an
 ## Scratch space
 
 ```bash
-
-
 kubectl apply -f https://projectcontour.io/quickstart/contour.yaml
 kubectl create rolebinding envoy-privileged \
                                       --clusterrole=vmware-system-tmc-psp-privileged \
@@ -41,9 +39,9 @@ k create deployment blue --image=ealen/echo-server:0.5.1 -o yaml --dry-run=clien
 
 
 kubectl create rolebinding client-privileged \
---clusterrole=vmware-system-tmc-psp-privileged \
---user=system:serviceaccount:default:default \
--n default
+    --clusterrole=vmware-system-tmc-psp-privileged \
+    --user=system:serviceaccount:default:default \
+    -n default
 ```
 
 ## Credits

@@ -8,18 +8,18 @@ Demo client for DNS/HTTP based blue-green deployment
 
     Select one of the probe mechanism and setup config for that
 
-    a. DNS based probe: edit and Apply `client-v2-dns.yaml`
+    a. DNS based probe: edit and Apply `client-dns.yaml`
 
       ```bash
-      kubectl apply -f client-v2-dns.yaml
+      kubectl apply -f client-dns.yaml
       ```
 
 
 
-    b. HTTP based probe: edit and Apply `client-v2-http.yaml`
+    b. HTTP based probe: edit and Apply `client-http.yaml`
 
       ```bash
-      kubectl apply -f client-v2-dns.yaml
+      kubectl apply -f client-dns.yaml
       ```
 
     **Configuration Options**
@@ -38,10 +38,10 @@ Demo client for DNS/HTTP based blue-green deployment
 
 1. **Deploy application**
 
-    Edit and apply `client-v2.yaml`
+    Edit and apply `client.yaml`
 
     ```bash
-    kubectl apply -f client-v2.yaml
+    kubectl apply -f client.yaml
     ```
 
 ## Build

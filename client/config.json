@@ -13,7 +13,12 @@
     "max": 600
   },
   "graph": {
-    "colors": ["blue", "green"]
+    "colors": ["blue", "green"],
+    "colorMap": {
+      "blue": "blue",
+      "green": "green"
+    }
+
   }
 
 }

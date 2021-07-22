@@ -1,5 +1,6 @@
 import React from "react";
 import { Container, Row, Col, Button } from "react-bootstrap";
+import { ThemeConsumer } from "react-bootstrap/esm/ThemeProvider";
 import HistoryChart from "./components/HistoryChart.js";
 import SummaryChart from "./components/SummaryChart.js";
 
@@ -32,10 +33,8 @@ export default class App extends React.Component {
       .then((response) => response.json())
       .then((response) => {
         this.setState(response);
-        if (response.status.running) {
+        if (response.status.running === true &&  this.autoUpdateTimer === null) {
           this.startAutoUpdate();
-        } else {
-          this.stopAutoUpdate();
         }
       });
   }
@@ -50,11 +49,12 @@ export default class App extends React.Component {
   startAutoUpdate() {
     this.autoUpdateTimer = setInterval(() => {
       this.updateState();
-    }, 1000);
+    }, 2000);
   }
   stopAutoUpdate() {
     if (this.autoUpdateTimer != null) {
       clearInterval(this.autoUpdateTimer);
+      this.autoUpdateTimer = null;
     }
   }
   stopTesting() {

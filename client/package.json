@@ -13,7 +13,7 @@
     "build": "cd frontend && npm install && npm run build",
     "docker-build": "docker  build -t ghcr.io/yogendra/blue-green:${TAG:-latest} .",
     "docker-publish": "docker  push ghcr.io/yogendra/blue-green:${TAG:-latest}",
-    "release": "npm run docker-build && npm run docker-publish"
+    "release-patch": "npm run docker-build && npm run docker-publish"
   },
   "keywords": [],
   "author": "",

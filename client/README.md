@@ -60,15 +60,27 @@ Demo client for DNS/HTTP based blue-green deployment
 
 ## Develop
 
+1. Set config environment variable
+
+    **Bash**
+
+    ```bash
+    export CONFIG_JSON="$(cat config.json)"
+    ```
+
+    **Fish**
+
+    ```bash
+    set -gx CONFIG_JSON (cat config.json)
+    ```
+
 1. Run backend
 
     ```bash
-    set CONFIG_JSON (cat config.json)
-    export CONFIG_JSON="$(cat config.json)"
     npm start
     ```
 
-    Point browser to http://localhost:3001
+    Point browser to [http://localhost:3001]
 
 1. Run frontend
 
@@ -77,7 +89,7 @@ Demo client for DNS/HTTP based blue-green deployment
     npm start
     ```
 
-    Point browser to http://localhost:3000
+    Point browser to [http://localhost:3000]
 
 ## Testing / Running
 

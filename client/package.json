@@ -5,10 +5,10 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
-    "test": "CONFIG_JSON=$(cat configHttp.json) node --experimental-json-modules server/index.js",
-    "test-dns": "CONFIG_JSON=$(cat configDns.json) node --experimental-json-modules server/index.js",
-    "start": "node --experimental-json-modules server/index.js",
-    "build": "cd client && npm install && npm run build",
+    "test": "CONFIG_JSON=$(cat configHttp.json) node --experimental-json-modules backend/index.js",
+    "test-dns": "CONFIG_JSON=$(cat configDns.json) node --experimental-json-modules backend/index.js",
+    "start": "node --experimental-json-modules backend/index.js",
+    "build": "cd frontend && npm install && npm run build",
     "docker-build": "docker  build -t ghcr.io/yogendra/blue-green:latest .",
     "docker-publish": "docker  push ghcr.io/yogendra/blue-green:latest"
     

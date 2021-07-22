@@ -1,10 +1,10 @@
-# CLIENT V2
+# Blue Green Testing - Client
 
-Demo client for DNS/HTTP based blue-green deployment
+Demo client for DNS/HTTP based blue-green deployment visualization
 
 ## Deploy
 
-1. **Setup Probe**
+1. **Setup Probe Configuration**
 
     Select one of the probe mechanism and setup config for that
 
@@ -14,7 +14,7 @@ Demo client for DNS/HTTP based blue-green deployment
       kubectl apply -f client-dns.yaml
       ```
 
-
+      **OR**
 
     b. HTTP based probe: edit and Apply `client-http.yaml`
 
@@ -36,13 +36,15 @@ Demo client for DNS/HTTP based blue-green deployment
     | `sample.max` | Maximum samples to keep (Number) | `600`|
     | `graph.colors` | Array of colors names for the graph | `["blue","green"]` |
 
-1. **Deploy application**
+1. **Deploy Client Module**
 
     Edit and apply `client.yaml`
 
     ```bash
     kubectl apply -f client.yaml
     ```
+
+1. Navigate to frontend url specified in the `Ingress` resource. Example: [client.nsxbg.core.cna-demo.ga](https://client.nsxbg.core.cna-demo.ga)
 
 ## Build
 
@@ -84,7 +86,7 @@ Demo client for DNS/HTTP based blue-green deployment
     npm start
     ```
 
-    Point browser to [http://localhost:3001]
+    Point browser to [localhost:3001](http://localhost:3001)
 
 1. Run frontend
 
@@ -93,7 +95,7 @@ Demo client for DNS/HTTP based blue-green deployment
     npm start
     ```
 
-    Point browser to [http://localhost:3000]
+    Point browser to [localhost:3000](http://localhost:3000)
 
 ## Testing / Running
 

@@ -6,20 +6,22 @@ import { Resolver } from "dns";
 
 
 import cors from "cors";
-import { readFileSync, existsSync} from 'fs';
 import path from "path";
 import { fileURLToPath } from 'url';
 
 
-const configFile = process.env.CONFIG_FILE || "config.json";
-const config = existsSync(configFile)? JSON.parse(readFileSync(configFile)): JSON.parse(process.env.CONFIG_JSON);
+if(! "CONFIG_JSON" in process.env){
+  console.error("CONFIG_JSON not set");
+  process.exit(1);
+}
+const config = JSON.parse(process.env.CONFIG_JSON)
 
 if(config === undefined){
   console.error("Config not set");
   process.exit(1);
-}else{
-  console.dir(config);
 }
+console.dir(config);
+
 function buildSources(){
   const sources = {};
   const emptyStats = {total: 0, history: []};

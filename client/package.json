@@ -5,13 +5,15 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
-    "test": "CONFIG_JSON=$(cat configHttp.json) node backend/index.js",
-    "test-dns": "CONFIG_JSON=$(cat configDns.json) node backend/index.js",
+    "test-http": "CONFIG_JSON=$(cat test/config-http.json) node backend/index.js",
+    "test-dns": "CONFIG_JSON=$(cat test/config-dns.json) node backend/index.js",
+    "test-docker-http": "docker run  --rm -it -p 3001:3001 -e CONFIG_JSON=$(cat config-http.json) --name blue-green --hostname blue-green ghcr.io/yogendra/blue-green:${TAG:-latest}",
+    "test-docker-dns": "docker run  --rm -it -p 3001:3001 -e CONFIG_JSON=$(cat config-dns.json) --name blue-green --hostname blue-green ghcr.io/yogendra/blue-green:${TAG:-latest}",
     "start": "node backend/index.js",
     "build": "cd frontend && npm install && npm run build",
-    "docker-build": "docker  build -t ghcr.io/yogendra/blue-green:latest .",
-    "docker-publish": "docker  push ghcr.io/yogendra/blue-green:latest"
-    
+    "docker-build": "docker  build -t ghcr.io/yogendra/blue-green:${TAG:-latest} .",
+    "docker-publish": "docker  push ghcr.io/yogendra/blue-green:${TAG:-latest}",
+    "release": "npm run docker-build && npm run docker-publish"
   },
   "keywords": [],
   "author": "",

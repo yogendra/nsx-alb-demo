@@ -65,13 +65,17 @@ Demo client for DNS/HTTP based blue-green deployment
     **Bash**
 
     ```bash
-    export CONFIG_JSON="$(cat config.json)"
+    export CONFIG_JSON="$(cat test/config-http.json)"
+    # OR for DNS
+    export CONFIG_JSON="$(cat test/config-dns.json)"
     ```
 
     **Fish**
 
     ```bash
-    set -gx CONFIG_JSON (cat config.json)
+    set -gx CONFIG_JSON (cat test/config-http.json)
+    # OR for DNS
+    set -gx CONFIG_JSON (cat test/config-dns.json)
     ```
 
 1. Run backend
